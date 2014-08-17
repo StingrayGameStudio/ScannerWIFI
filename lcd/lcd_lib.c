@@ -10,16 +10,16 @@ void LCDsendChar(unsigned char ch)		//Sends Char to LCD
 {
 	LDP=(ch>>4);
 	LCP|=1<<LCD_RS;
-	PORTB|=1<<PB0;
+	LCP|=1<<LCD_E;
 	_delay_ms(1);
-	PORTB&=~(1<<PB0);
+	LCP&=~(1<<LCD_E);
 	LCP&=~(1<<LCD_RS);
 	_delay_ms(1);
 	LDP=((ch&0b00001111));
 	LCP|=1<<LCD_RS;
-	PORTB|=1<<PB0;
+	LCP|=1<<LCD_E;
 	_delay_ms(1);
-	PORTB&=~(1<<PB0);
+	LCP&=~(1<<LCD_E);
 	LCP&=~(1<<LCD_RS);
 	_delay_ms(1);
 }
@@ -28,14 +28,14 @@ void LCDsendCommand(unsigned char  cmd)
 	LCP&=~(1<<LCD_RS);
 	//4 bit part
 	LDP=(cmd>>4);
-	PORTB|=1<<PB0;
+	LCP|=1<<LCD_E;
 	_delay_ms(1);
-	PORTB&=~(1<<PB0);
+	LCP&=~(1<<LCD_E);
 	_delay_ms(1);
 	LDP=((cmd&0b00001111));
-	PORTB|=1<<PB0;
+	LCP|=1<<LCD_E;
 	_delay_ms(1);
-	PORTB&=~(1<<PB0);
+	LCP&=~(1<<LCD_E);
 	_delay_ms(1);
 }
 void LCDinit(void)
@@ -45,24 +45,24 @@ void LCDinit(void)
 	LDP=0x00;
 	LCP=0x00;
 	LDDR|=1<<LCD_D7|1<<LCD_D6|1<<LCD_D5|1<<LCD_D4;
-	DDRB|=1<<PB0;LCDR|=1<<LCD_RS;
+	LCDR|=1<<LCD_E;LCDR|=1<<LCD_RS;
    //---------one------
 	LDP=0<<LCD_D7|0<<LCD_D6|1<<LCD_D5|1<<LCD_D4;
-	PORTB|=1<<PB0;LCP|=0<<LCD_RS;
+	LCP|=1<<LCD_E;LCP&=~(1<<LCD_RS);
 	_delay_ms(1);
-	PORTB&=~(1<<PB0);
+	LCP&=~(1<<LCD_E);
 	_delay_ms(1);
 	//-----------two-----------
 	LDP=0<<LCD_D7|0<<LCD_D6|1<<LCD_D5|1<<LCD_D4;
-	PORTB|=1<<PB0;LCP|=0<<LCD_RS;
+	LCP|=1<<LCD_E;LCP&=~(1<<LCD_RS);
 	_delay_ms(1);
-	PORTB&=~(1<<PB0);
+	LCP&=~(1<<LCD_E);
 	_delay_ms(1);
 	//-------three-------------
 	LDP=0<<LCD_D7|0<<LCD_D6|1<<LCD_D5|0<<LCD_D4;
-	PORTB|=1<<PB0;LCP|=0<<LCD_RS;
+	LCP|=1<<LCD_E;LCP&=~(1<<LCD_RS);
 	_delay_ms(1);
-	PORTB&=~(1<<PB0);
+	LCP&=~(1<<LCD_E);
 	_delay_ms(1);
 	//--------4 bit--dual line---------------
 	LCDsendCommand(0b00101000);
